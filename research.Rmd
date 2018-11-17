@@ -1,0 +1,120 @@
+---
+title: "My Research"
+author: "Elaona Lupetuulelei Lemoto Tongilava"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+Welcome!
+
+
+# Past Research Projects
+
+SDS 291: Multiple Regression Final Research Project: 
+
+Mapping Domestic Violence: Drawing connections between lifestyle predictors and likelihood of becoming a victim of domestic violence
+
+In an effort to contribute to research regarding domestic violence, this project aims to find lifestyle factors that may used as indicators to determine the likelihood that a woman will experience severe domestic violence from her husband or partner. These indicators can be used to define “at risk” groups and gives governments and organizations the trends necessary to establish programs and allocate funds for these demographics. Data collected from women (ages 15-49) living Tanzania in 2015 was used to answer this question. Several lifestyle factors were analyzed to determine what may or may not be an indicator variable when predicting likelihood of domestic violence; these factors include: weight (kg); age; the number of young children (under age 5) living in the household; household wealth (divided into quintiles ranging from poorest to richest); total education (years); how recently the respondent had sexual intercouse (days); how frequent a woman is afraid of her husband or partner; how frequent a woman’s husband or partner drinks alcohol.
+
+
+```{r setup, include=FALSE}
+# Appendix 
+## Table of the results 
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(tidyverse)
+require(magrittr)
+library(ipumsr)
+require(dplyr)
+ipum<-read_csv("idhs_00004.csv")
+```
+
+```{r,include=FALSE}
+ipum <- ipum %>%
+  mutate(wealthq=factor(WEALTHQ))
+ipum <- ipum %>%
+  mutate(dvpmsever=factor(DVPMSEVER))
+ipum <- ipum %>%
+  mutate(dvdrunksfq=factor(ALFREQ))
+ipum <- ipum %>%
+  mutate(dvfearfq=factor(DVFEARFQ))
+```
+
+```{r,include=FALSE}
+ipum_primary <- ipum %>%
+  select(dvpmsever,EDYRTOTAL,wealthq,WEIGHTFEM,HHKIDLT5,AGE,TIMESINCESEXD,dvdrunksfq,dvfearfq)
+```
+
+```{r,include=FALSE}
+ipum_primary<-ipum_primary%>%
+  filter(dvfearfq==0|dvfearfq==1|dvfearfq==2)
+```
+
+
+```{r,include=FALSE}
+ipum_primary<-ipum_primary%>%
+  filter(dvpmsever==0|dvpmsever==1)
+```
+
+```{r,warning=FALSE}
+logm = glm(dvpmsever~EDYRTOTAL+wealthq+WEIGHTFEM+HHKIDLT5+AGE+TIMESINCESEXD+dvfearfq,data=ipum_primary,family=binomial)
+```
+```{r,include=FALSE}
+summary(logm)
+```
+### Results: Hypothesis 1
+### Likelihood of experiencing domestic violence VS. education + wealth
+```{r}
+exp(confint(logm))
+```
+#### Graph 
+```{r}
+library(broom)
+preds1 <- tidy(logm, conf.int = TRUE, exponentiate = TRUE) 
+ggplot(preds1, aes(y = estimate, x = term)) +
+        geom_pointrange(aes(ymin = conf.low, ymax = conf.high),
+                       
+                       size = 1.2) +
+        geom_hline(yintercept = 1.0, linetype = "dotted", size = .5) +
+        scale_y_log10(breaks = c(0.5, 1.0, 2.0),
+                      minor_breaks = NULL) +
+        labs(y = "Odds ratio", x = "Variable") +
+        coord_flip(ylim = c(0.1, 10)) +
+        theme_bw()
+```
+
+### Results: Hypothesis 2
+#### Likelihood of a woman drinking daily VS. DV + education + wealth
+```{r, include=FALSE}
+ipum_second<-ipum_primary%>%
+  mutate(dvdrunksfq=if_else(dvdrunksfq==10,1,0))
+```
+
+```{r,warning=FALSE}
+logm2 = glm(dvdrunksfq~dvpmsever+EDYRTOTAL+wealthq+WEIGHTFEM+HHKIDLT5+AGE+TIMESINCESEXD+dvfearfq,data=ipum_second,family=binomial)
+summary(logm2)
+```
+
+```{r}
+exp(confint(logm2))
+```
+#### Graph
+```{r}
+preds2 <- tidy(logm2, conf.int = TRUE, exponentiate = TRUE) 
+ggplot(preds2, aes(y = estimate, x = term)) +
+        geom_pointrange(aes(ymin = conf.low, ymax = conf.high),
+                       
+                       size = 1.2) +
+        geom_hline(yintercept = 1.0, linetype = "dotted", size = .5) +
+        scale_y_log10(breaks = c(0.5, 1.0, 2.0),
+                      minor_breaks = NULL) +
+        labs(y = "Odds ratio", x = "Variable") +
+        coord_flip(ylim = c(0.1, 10)) +
+        theme_bw()
+```
+

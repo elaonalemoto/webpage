@@ -1,6 +1,6 @@
 ---
-title: "About This Website"
-author: "Your name"
+title: "About Me"
+author: "Elaona Lupetuulelei Lemoto Tongilava"
 date: "Last updated on `r Sys.Date()`"
 output:
   html_document:
@@ -10,12 +10,14 @@ output:
     df_print: kable
 ---
 
-More about this website.
 
-# Section name
+# Welcome to my page!
 
-Hello world!
+## About Me
 
-## Subsection name
+Hello! My name is Elaona Lupetuulelei Lemoto Tongilava, I am third-year at Smith College, and I study Economics and Statistical Data Science. Outside of my studies, I am the major liasons for both the Economics and SDS departments, I am a Gold Key member, I tutor for different courses, and I am a research assistant.
 
-Hello world again!
+Updates regarding projects and current/past research will be posted on my research page.
+
+Email: elemoto@smith.edu
+
