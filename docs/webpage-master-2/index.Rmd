@@ -1,0 +1,22 @@
+---
+title: "Elaona Lemoto"
+author: "Elaona Lemoto"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+    code_folding: hide
+    
+---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+
+Welcome!
+
+

@@ -1,0 +1,24 @@
+name: Elaona Lemoto's GitHub
+output_dir: docs
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_depth: 2
+    theme: journal
+    highlight: tango
+    df_print: paged
+    lib_dir: site_libs
+    self_contained: no
+navbar:
+  title: E. Lemoto Tongliava
+  left:
+  - text: About
+    href: about.html
+  - text: Research
+    href: research.html
+  right:
+  - icon: fa-slack fa-lg
+    href: https://2018-fall-sds-albert.slack.com/
+    
+
